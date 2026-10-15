@@ -4,7 +4,7 @@
 **Tecnología principal:** Spring Boot  
 **Arquitectura:** Microservicios + API Composite  
 **Comunicación:** HTTPS / REST  
-**Patrón de persistencia:** Database-per-Service  
+**Patrón de persistencia:** Database-per-Service
 
 ---
 
@@ -121,39 +121,37 @@ Cliente Web / PWA
 
 # 3. Microservicios del Sistema
 
-## 3.1. `vehicle-service`
+## 3.1. `vehicle-service` Jorge
 
 ### Microservicio A: Gestión de Vehículos
 
 ### Responsabilidad
 
-Administrar toda la información técnica y operacional relacionada con los vehículos de la flota.
+Administrar toda la información técnica de los vehículos.
 
 Entre sus responsabilidades se incluyen:
 
-- Administración del catálogo de vehículos.
 - Estado del motor.
 - Estado de batería o combustible.
 - Última ubicación registrada.
 - Información de telemetría.
-- Información técnica del vehículo.
+- Información técnica del vehículo. (todo: explicar qué es lo que abarca este punto)
 - Historial de mantenimientos.
-- Estado operativo del vehículo.
+- Estado operativo del vehículo. (todo: explicar qué es lo que abarca este punto)
 
 ### Base de datos
 
 El microservicio deberá utilizar una base de datos independiente denominada conceptualmente:
 
 ```text
-Base de Datos 1
+vehicle-service-db
 ```
 
-Esta base podrá implementarse utilizando:
+Nombre de base de datos puede cambiar
 
-- PostgreSQL.
+Esta base se implementará utilizando:
+
 - MongoDB.
-
-Para la implementación recomendada puede utilizarse **PostgreSQL**, debido a la naturaleza estructurada y relacional de los datos de vehículos.
 
 ### Información almacenada
 
@@ -188,6 +186,18 @@ Ejemplo:
 
 ```http
 GET /vehicles/veh-001
+```
+
+#### Consultar varios vehículos
+
+```http
+GET /vehicles/
+```
+
+Ejemplo:
+
+```http
+GET /vehicles/
 ```
 
 #### Crear vehículo
@@ -226,9 +236,32 @@ Ejemplo de respuesta:
 }
 ```
 
+```http
+GET /vehicles/
+```
+
+Ejemplo de respuesta:
+
+```json
+[
+  {
+    "id": "veh-001",
+    "plate": "ABC-1234",
+    "model": "EcoTruck EV",
+    "batteryStatusPercentage": 84.5
+  }
+  {
+    "id": "veh-001",
+    "plate": "ABC-1234",
+    "model": "EcoTruck EV",
+    "batteryStatusPercentage": 84.5
+  }
+]
+```
+
 ---
 
-## 3.2. `driver-service`
+## 3.2. `driver-service` Diego
 
 ### Microservicio B: Gestión de Conductores
 
@@ -309,10 +342,7 @@ Ejemplo:
   "vehicleId": "veh-001",
   "licenseCategory": "Commercial-A",
   "safetyScore": 98.2,
-  "certifications": [
-    "Defensive Driving",
-    "Hazardous Materials Safety"
-  ]
+  "certifications": ["Defensive Driving", "Hazardous Materials Safety"]
 }
 ```
 
@@ -938,17 +968,17 @@ El API Composite deberá evitar exponer innecesariamente detalles internos de im
 
 # 18. Códigos HTTP Esperados
 
-| Código | Significado |
-|---|---|
-| `200 OK` | Consulta procesada correctamente |
-| `201 Created` | Recurso creado correctamente |
-| `400 Bad Request` | La solicitud contiene datos inválidos |
-| `404 Not Found` | El recurso solicitado no existe |
-| `409 Conflict` | Existe un conflicto con el estado actual del recurso |
-| `500 Internal Server Error` | Error interno |
-| `502 Bad Gateway` | Error comunicándose con un microservicio |
-| `503 Service Unavailable` | Microservicio temporalmente no disponible |
-| `504 Gateway Timeout` | Un microservicio excedió el tiempo permitido |
+| Código                      | Significado                                          |
+| --------------------------- | ---------------------------------------------------- |
+| `200 OK`                    | Consulta procesada correctamente                     |
+| `201 Created`               | Recurso creado correctamente                         |
+| `400 Bad Request`           | La solicitud contiene datos inválidos                |
+| `404 Not Found`             | El recurso solicitado no existe                      |
+| `409 Conflict`              | Existe un conflicto con el estado actual del recurso |
+| `500 Internal Server Error` | Error interno                                        |
+| `502 Bad Gateway`           | Error comunicándose con un microservicio             |
+| `503 Service Unavailable`   | Microservicio temporalmente no disponible            |
+| `504 Gateway Timeout`       | Un microservicio excedió el tiempo permitido         |
 
 ---
 
@@ -1038,35 +1068,35 @@ El API Composite no deberá almacenar datos propios de vehículos o conductores.
 
 ## `vehicle-service`
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/vehicles` | Obtener todos los vehículos |
-| `GET` | `/vehicles/{id}` | Obtener un vehículo |
-| `POST` | `/vehicles` | Crear un vehículo |
-| `PUT` | `/vehicles/{id}` | Actualizar un vehículo |
-| `DELETE` | `/vehicles/{id}` | Eliminar un vehículo |
+| Método   | Endpoint         | Descripción                 |
+| -------- | ---------------- | --------------------------- |
+| `GET`    | `/vehicles`      | Obtener todos los vehículos |
+| `GET`    | `/vehicles/{id}` | Obtener un vehículo         |
+| `POST`   | `/vehicles`      | Crear un vehículo           |
+| `PUT`    | `/vehicles/{id}` | Actualizar un vehículo      |
+| `DELETE` | `/vehicles/{id}` | Eliminar un vehículo        |
 
 ---
 
 ## `driver-service`
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/drivers` | Obtener todos los conductores |
-| `GET` | `/drivers/{id}` | Obtener un conductor |
-| `GET` | `/drivers/by-vehicle/{vehicleId}` | Obtener conductor por vehículo |
-| `POST` | `/drivers` | Crear un conductor |
-| `PUT` | `/drivers/{id}` | Actualizar un conductor |
-| `DELETE` | `/drivers/{id}` | Eliminar un conductor |
+| Método   | Endpoint                          | Descripción                    |
+| -------- | --------------------------------- | ------------------------------ |
+| `GET`    | `/drivers`                        | Obtener todos los conductores  |
+| `GET`    | `/drivers/{id}`                   | Obtener un conductor           |
+| `GET`    | `/drivers/by-vehicle/{vehicleId}` | Obtener conductor por vehículo |
+| `POST`   | `/drivers`                        | Crear un conductor             |
+| `PUT`    | `/drivers/{id}`                   | Actualizar un conductor        |
+| `DELETE` | `/drivers/{id}`                   | Eliminar un conductor          |
 
 ---
 
 ## `fleet-composite-service`
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/api/v1/fleet-insights/{assignmentId}` | Obtener información consolidada de una asignación |
-| `GET` | `/api/v1/fleet-insights/vehicle/{vehicleId}` | Consulta consolidada directa por vehículo, opcional |
+| Método | Endpoint                                     | Descripción                                         |
+| ------ | -------------------------------------------- | --------------------------------------------------- |
+| `GET`  | `/api/v1/fleet-insights/{assignmentId}`      | Obtener información consolidada de una asignación   |
+| `GET`  | `/api/v1/fleet-insights/vehicle/{vehicleId}` | Consulta consolidada directa por vehículo, opcional |
 
 ---
 
